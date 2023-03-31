@@ -2,8 +2,6 @@
 ## Description
 A tool to generate encrypted wiegand block for HID Corporate 1000 35-bit iClass cards. Can also generate .picopass files to be used with the Flipper Zero.
 
-See [MNGVULN0033482](https://comcastsec.service-now.com/nav_to.do?uri=x_mcse_managed_vul_vulnerable_items.do?sys_id=885017151bf1a910761b8771604bcb71) for more information regarding the vulnerability.
-
 ## Usage
 ```
 ❯ python3 mystique.py -h
