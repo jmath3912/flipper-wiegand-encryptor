@@ -1,11 +1,11 @@
-# mystique
+# flipper-wiegand-encryptor
 ## Description
 A tool to generate encrypted wiegand block for HID Corporate 1000 35-bit iClass cards. Can also generate .picopass files to be used with the Flipper Zero.
 
 ## Usage
 ```
-❯ python3 mystique.py -h
-usage: mystique.py [-h] --fc FC --cn CN [-n NAME]
+❯ python3 encrypt.py -h
+usage: encrypt.py [-h] --fc FC --cn CN [-n NAME]
 
 DESCRIPTION: Generate encrypted wiegand block for HID Corporate 1000 35-bit iClass cards. Can also generate .picopass files to
 be used with the Flipper Zero
@@ -28,7 +28,7 @@ options:
 ## How to run
 Let's say the card you want to clone has a facility code of 1337 and the card number is 69420. To get the plain and encrypted Wiegand block, you would run the following:
 ```
-❯ python3 mystique.py --fc 1337 --cn 69420
+❯ python3 encrypt.py --fc 1337 --cn 69420
 [+] FC.......... 1337
 [+] card num.... 69420
 [+] plaintext... 00000008A7221E59
@@ -36,7 +36,7 @@ Let's say the card you want to clone has a facility code of 1337 and the card nu
 ```
 If you want this to then be saved to a `.picopass` file to be used with the Flipper Zero, add the `-n/--name` flag to give the output file a name. For example, let's say the badge belongs to "Dade Murphy" and has the same facility code and card number as before. Run the following command:
 ```
-❯ python3 mystique.py --fc 1337 --cn 69420 --name dadeMurphy
+❯ python3 encrypt.py --fc 1337 --cn 69420 --name dadeMurphy
 [+] FC.......... 1337
 [+] card num.... 69420
 [+] plaintext... 00000008A7221E59
