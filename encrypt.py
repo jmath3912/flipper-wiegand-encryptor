@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from Crypto.Cipher import DES3
 import binascii
 import argparse
