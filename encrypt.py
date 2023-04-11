@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import sys
 from Crypto.Cipher import DES3
 import binascii
 import argparse
@@ -12,10 +13,6 @@ def bitCount(int_type):
 	return(count)
  
 def generate35bitHex(facilityCode, cardCode):
-	# generates a hex code for HID 35 bit format card
-	# see this page to understand formats:
-	#http://www.pagemac.com/azure/data_formats.php
- 
 	cardData = (facilityCode << 21) + (cardCode << 1)
 	# 2nd MSB even parity 
 	parity1 = bitCount(cardData & 0x1B6DB6DB6) & 1
@@ -32,7 +29,7 @@ def generate35bitHex(facilityCode, cardCode):
 def des3encrypt(wiegandString):
 	# Define the key and data to be encrypted
 	key = b'\xb4\x21\x2c\xca\xb7\xed\x21\x0f\x7b\x93\xd4\x59\x39\xc7\xdd\x36'
-	data = int(wiegandString,16).to_bytes(8)
+	data = int(wiegandString,16).to_bytes(8, 'big')
 
 	# Create the 3DES cipher object and encrypt the data
 	cipher = DES3.new(key, DES3.MODE_ECB)
