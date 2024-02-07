@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
 	# Generate 35 bit hex string and encrypt it
 	wiegandPlaintext = generate35bitHex(facilityCode, cardNumber)
-	wiegandFlipperRFID = flipperFormat(wiegandPlaintext)
+	wiegandFlipperRFID = flipperRFIDFormat(wiegandPlaintext)
 	wiegandEncrypted = str(des3encrypt(wiegandPlaintext)).upper()
 	formattedWiegandEncrypted = ' '.join([wiegandEncrypted[i:i+2] for i in range(0, len(wiegandEncrypted), 2)])
 
