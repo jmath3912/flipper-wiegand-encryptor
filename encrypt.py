@@ -37,6 +37,14 @@ def des3encrypt(wiegandString):
 
 	# Print the encrypted data in hex format
 	return encrypted_data
+
+def flipperRFIDFormat(wiegandPlaintext):
+	appendZero = wiegandPlaintext[1:] + wiegandPlaintext[0]
+	RFIDList = [appendZero[i:i+2] for i in range(0,len(appendZero),2)][2:]
+	RFIDList[0] = '02'
+	wiegandFlipperRFID = ':'.join(RFIDList)
+	return wiegandFlipperRFID
+
 if __name__ == "__main__":
 	# Define the command-line arguments
 	parser = argparse.ArgumentParser(description='DESCRIPTION: Generate encrypted wiegand block for HID Corporate 1000 35-bit iClass cards. Can also generate .picopass files to be used with the Flipper Zero')
@@ -50,7 +58,7 @@ if __name__ == "__main__":
 	# Check the values of the command-line arguments
 	if args.fc < 0 or args.fc > 4095:
 		parser.error('--fc must be an integer between 0 and 4095')
-	if args.cn < 1 or args.cn > 1048575:
+	if args.cn < 0 or args.cn > 1048575:
 		parser.error('--cn must be an integer between 1 and 1048575')
 
 	# Get user input for badge details
@@ -60,12 +68,14 @@ if __name__ == "__main__":
 
 	# Generate 35 bit hex string and encrypt it
 	wiegandPlaintext = generate35bitHex(facilityCode, cardNumber)
+	wiegandFlipperRFID = flipperFormat(wiegandPlaintext)
 	wiegandEncrypted = str(des3encrypt(wiegandPlaintext)).upper()
 	formattedWiegandEncrypted = ' '.join([wiegandEncrypted[i:i+2] for i in range(0, len(wiegandEncrypted), 2)])
 
 	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m FC.......... {facilityCode}")
 	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m card num.... {cardNumber}")
 	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m plaintext... {wiegandPlaintext}")
+	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m Flip RFID... {wiegandFlipperRFID}")
 	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m encrypted... {wiegandEncrypted}")
 
 	# Print the result in flipper picopass format
