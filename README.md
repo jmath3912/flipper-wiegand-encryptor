@@ -1,14 +1,14 @@
 # flipper-wiegand-encryptor
 ## Description
-A tool to generate encrypted wiegand block for HID Corporate 1000 35-bit iClass cards. Can also generate .picopass files to be used with the Flipper Zero.
+A tool to generate encrypted wiegand block for HID Corporate 1000 35-bit iClass or HID Prox cards. Can also generate .picopass files and the formatted RFID hex data to be used with the Flipper Zero.
 
 ## Usage
 ```
 ❯ python3 encrypt.py -h
 usage: encrypt.py [-h] --fc FC --cn CN [-n NAME]
 
-DESCRIPTION: Generate encrypted wiegand block for HID Corporate 1000 35-bit iClass cards. Can also generate .picopass files to
-be used with the Flipper Zero
+DESCRIPTION: Generate encrypted wiegand block for HID Corporate 1000 35-bit iClass cards. Can also generate .picopass files and
+the formatted RFID hex data to be used with the Flipper Zero
 
 options:
   -h, --help            show this help message and exit
