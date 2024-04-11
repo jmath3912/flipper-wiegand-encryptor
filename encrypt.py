@@ -29,7 +29,7 @@ def generate35bitHex(facilityCode, cardCode):
 def des3encrypt(wiegandString):
 	# Define the key and data to be encrypted
 	key = b'\xb4\x21\x2c\xca\xb7\xed\x21\x0f\x7b\x93\xd4\x59\x39\xc7\xdd\x36'
-	data = int(wiegandString,16).to_bytes(8, 'big')
+	data = int(wiegandString,16).to_bytes(24, 'big')
 
 	# Create the 3DES cipher object and encrypt the data
 	cipher = DES3.new(key, DES3.MODE_ECB)
@@ -37,6 +37,17 @@ def des3encrypt(wiegandString):
 
 	# Print the encrypted data in hex format
 	return encrypted_data
+
+def parseBlocks(encryptedString):
+	blocks = [encryptedString[i:i+16] for i in range(0, len(encryptedString), 16)]
+	blockSeven = blocks[-1]
+	blockEight = blocks[-2]
+	blockNine = blocks[-3]
+	return blockSeven, blockEight, blockNine
+
+def formatBlock(block):
+	formattedBlock = ' '.join([block[i:i+2] for i in range(0, len(block), 2)])
+	return formattedBlock
 
 def flipperRFIDFormat(wiegandPlaintext):
 	appendZero = wiegandPlaintext[1:] + wiegandPlaintext[0]
@@ -58,7 +69,7 @@ if __name__ == "__main__":
 	# Check the values of the command-line arguments
 	if args.fc < 0 or args.fc > 4095:
 		parser.error('--fc must be an integer between 0 and 4095')
-	if args.cn < 0 or args.cn > 1048575:
+	if args.cn < 1 or args.cn > 1048575:
 		parser.error('--cn must be an integer between 1 and 1048575')
 
 	# Get user input for badge details
@@ -70,13 +81,16 @@ if __name__ == "__main__":
 	wiegandPlaintext = generate35bitHex(facilityCode, cardNumber)
 	wiegandFlipperRFID = flipperRFIDFormat(wiegandPlaintext)
 	wiegandEncrypted = str(des3encrypt(wiegandPlaintext)).upper()
-	formattedWiegandEncrypted = ' '.join([wiegandEncrypted[i:i+2] for i in range(0, len(wiegandEncrypted), 2)])
+	blockSeven,blockEight,blockNine = parseBlocks(wiegandEncrypted)
+	formattedBlockSeven = formatBlock(blockSeven)
+	formattedBlockEight = formatBlock(blockEight)
+	formattedBlockNine = formatBlock(blockNine)
 
 	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m FC.......... {facilityCode}")
 	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m card num.... {cardNumber}")
 	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m plaintext... {wiegandPlaintext}")
 	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m Flip RFID... {wiegandFlipperRFID}")
-	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m encrypted... {wiegandEncrypted}")
+	print(f"\u001b[33m[\u001b[32m+\u001b[33m]\u001b[0m encrypted... {blockSeven}")
 
 	# Print the result in flipper picopass format
 	if filename != None:
@@ -91,9 +105,9 @@ if __name__ == "__main__":
 			f.write('Block 4: FF FF FF FF FF FF FF FF\n')
 			f.write('Block 5: FF FF FF FF FF FF FF FF\n')
 			f.write('Block 6: 03 03 03 03 00 03 E0 17\n')
-			f.write(f'Block 7: {formattedWiegandEncrypted}\n')
-			f.write('Block 8: 2A D4 C8 21 1F 99 68 71\n')
-			f.write('Block 9: 2A D4 C8 21 1F 99 68 71\n')
+			f.write(f'Block 7: {formattedBlockSeven}\n')
+			f.write(f'Block 8: {formattedBlockEight}\n')
+			f.write(f'Block 9: {formattedBlockNine}\n')
 			f.write('Block 10: FF FF FF FF FF FF FF FF\n')
 			f.write('Block 11: FF FF FF FF FF FF FF FF\n')
 			f.write('Block 12: FF FF FF FF FF FF FF FF\n')
